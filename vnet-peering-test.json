@@ -5,11 +5,11 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.1.6515",
-      "templateHash": "983985792200238254"
+      "templateHash": "14726642096924276251"
     }
   },
   "parameters": {
-    "location1": {
+    "vnet1_location": {
       "type": "string",
       "defaultValue": "japaneast",
       "allowedValues": [
@@ -20,10 +20,10 @@
         "japanwest"
       ],
       "metadata": {
-        "description": "Location of the resources"
+        "description": "Location of the VNET1"
       }
     },
-    "location2": {
+    "vnet2_location": {
       "type": "string",
       "defaultValue": "japanwest",
       "allowedValues": [
@@ -34,17 +34,17 @@
         "japanwest"
       ],
       "metadata": {
-        "description": "Location of the resources"
+        "description": "Location of the VNET2"
       }
     },
-    "vnet1Name": {
+    "vnet1_Name": {
       "type": "string",
       "defaultValue": "vNet1",
       "metadata": {
         "description": "Name for vNet 1"
       }
     },
-    "vnet2Name": {
+    "vnet2_Name": {
       "type": "string",
       "defaultValue": "vNet2",
       "metadata": {
@@ -68,8 +68,8 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-05-01",
-      "name": "[parameters('vnet1Name')]",
-      "location": "[parameters('location1')]",
+      "name": "[parameters('vnet1_Name')]",
+      "location": "[parameters('vnet1_location')]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -89,26 +89,26 @@
     {
       "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
       "apiVersion": "2020-05-01",
-      "name": "[format('{0}/{1}', parameters('vnet1Name'), format('{0}-{1}', parameters('vnet1Name'), parameters('vnet2Name')))]",
+      "name": "[format('{0}/{1}', parameters('vnet1_Name'), format('{0}-{1}', parameters('vnet1_Name'), parameters('vnet2_Name')))]",
       "properties": {
         "allowVirtualNetworkAccess": true,
         "allowForwardedTraffic": false,
         "allowGatewayTransit": false,
         "useRemoteGateways": false,
         "remoteVirtualNetwork": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2Name'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2_Name'))]"
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1Name'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2Name'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1_Name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2_Name'))]"
       ]
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-05-01",
-      "name": "[parameters('vnet2Name')]",
-      "location": "[parameters('location2')]",
+      "name": "[parameters('vnet2_Name')]",
+      "location": "[parameters('vnet2_location')]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -128,19 +128,19 @@
     {
       "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
       "apiVersion": "2020-05-01",
-      "name": "[format('{0}/{1}', parameters('vnet2Name'), format('{0}-{1}', parameters('vnet2Name'), parameters('vnet1Name')))]",
+      "name": "[format('{0}/{1}', parameters('vnet2_Name'), format('{0}-{1}', parameters('vnet2_Name'), parameters('vnet1_Name')))]",
       "properties": {
         "allowVirtualNetworkAccess": true,
         "allowForwardedTraffic": false,
         "allowGatewayTransit": false,
         "useRemoteGateways": false,
         "remoteVirtualNetwork": {
-          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1Name'))]"
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1_Name'))]"
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1Name'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2Name'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet1_Name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet2_Name'))]"
       ]
     }
   ]
