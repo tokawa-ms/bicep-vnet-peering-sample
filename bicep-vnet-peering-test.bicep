@@ -1,4 +1,4 @@
-@description('Location of the resources')
+@description('Location of the VNET1')
 @allowed([
   'eastus2'
   'uk'
@@ -6,9 +6,9 @@
   'japaneast'
   'japanwest'
 ])
-param location1 string = 'japaneast'
+param vnet1_location string = 'japaneast'
 
-@description('Location of the resources')
+@description('Location of the VNET2')
 @allowed([
   'eastus2'
   'uk'
@@ -16,13 +16,13 @@ param location1 string = 'japaneast'
   'japaneast'
   'japanwest'
 ])
-param location2 string = 'japanwest'
+param vnet2_location string = 'japanwest'
 
 @description('Name for vNet 1')
-param vnet1Name string = 'vNet1'
+param vnet1_Name string = 'vNet1'
 
 @description('Name for vNet 2')
-param vnet2Name string = 'vNet2'
+param vnet2_Name string = 'vNet2'
 
 var vnet1Config = {
   addressSpacePrefix: '10.1.0.0/24'
@@ -36,8 +36,8 @@ var vnet2Config = {
 }
 
 resource vnet1 'Microsoft.Network/virtualNetworks@2020-05-01' = {
-  name: vnet1Name
-  location: location1
+  name: vnet1_Name
+  location: vnet1_location
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -57,7 +57,7 @@ resource vnet1 'Microsoft.Network/virtualNetworks@2020-05-01' = {
 
 resource VnetPeering1 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-05-01' = {
   parent: vnet1
-  name: '${vnet1Name}-${vnet2Name}'
+  name: '${vnet1_Name}-${vnet2_Name}'
   properties: {
     allowVirtualNetworkAccess: true
     allowForwardedTraffic: false
@@ -70,8 +70,8 @@ resource VnetPeering1 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
 }
 
 resource vnet2 'Microsoft.Network/virtualNetworks@2020-05-01' = {
-  name: vnet2Name
-  location: location2
+  name: vnet2_Name
+  location: vnet2_location
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -91,7 +91,7 @@ resource vnet2 'Microsoft.Network/virtualNetworks@2020-05-01' = {
 
 resource vnetPeering2 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-05-01' = {
   parent: vnet2
-  name: '${vnet2Name}-${vnet1Name}'
+  name: '${vnet2_Name}-${vnet1_Name}'
   properties: {
     allowVirtualNetworkAccess: true
     allowForwardedTraffic: false
